@@ -8,6 +8,6 @@ public class MainClient {
 		Client client2 = new Client(2);
 		
 		client1.start();
-		client2.start();
+		//client2.start();
 	}
 }
