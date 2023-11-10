@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Random;
 
@@ -14,7 +15,6 @@ import Balancer.Balancer;
 public class Client extends Thread {
     private final int id;
     private static final String SERVER_IP = "127.0.0.1";
-
     private Socket socket;
     private PrintWriter out;
 
@@ -31,61 +31,63 @@ public class Client extends Thread {
         try {
             Random random = new Random();
             boolean bool = random.nextBoolean();
-            int balancer_port = 777;
+            int balancer_port = 1777;
 
-            // if (bool) {
-            // balancer_port = 12345;
-            // }
-            try {
-                socket = new Socket(SERVER_IP, balancer_port);
-            } catch (ConnectException e) {
-                System.out.println("Troquei de porta");
+            if (bool) {
                 balancer_port = 12345;
-                socket = new Socket(SERVER_IP, balancer_port);
+            }
+            while (true) {
+                try {
+                    socket = new Socket(SERVER_IP, balancer_port);
+                    System.out.println("Cliente " + id + " conectado na porta " + balancer_port);
+                    break;
+                } catch (SocketException e) {
+                    if (balancer_port == 12345)
+                        balancer_port = 1777;
+                    else
+                        balancer_port = 12345;
+                    continue;
+                }
             }
         } catch (ConnectException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return socket;
     }
 
     public void run() {
         Random random = new Random();
-        // while (true) {
-        try {
-            boolean bool = random.nextBoolean(); // False - Write, True - Read
+        while (true) {
+            try {
+                boolean isWrite = random.nextBoolean(); // False - Write, True - Read
 
-            int sleepTime = getRandomNumber(50, 200);
-            int number_1 = getRandomNumber(2, 1000000);
-            int number_2 = getRandomNumber(2, 1000000);
+                // int sleepTime = getRandomNumber(500, 2000);
+                int sleepTime = 4000;
+                int number_1 = getRandomNumber(2, 1000000);
+                int number_2 = getRandomNumber(2, 1000000);
 
-            socket = connectBalancerPort();
-            out = new PrintWriter(socket.getOutputStream(), true);
+                socket = connectBalancerPort();
+                out = new PrintWriter(socket.getOutputStream(), true);
 
-            if (!bool) {
-                System.out.println("Client" + id + "cheking GCD:" + number_1 + "&" + number_2);
-                out.println("Write" + number_1 + "-" + number_2);
-            } else {
-                System.out.println("Client Reading");
-                out.println("Read");
+                if (!isWrite) {
+                    System.out.println("[CLIENT] " + id + " checando MDC: " + number_1 + " & " + number_2);
+                    out.println("write " + number_1 + " - " + number_2);
+                } else {
+                    System.out.println("Cliente lendo");
+                    out.println("read");
+                }
+
+                socket.close();
+
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            socket.close();
 
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
-        // }
     }
 }
