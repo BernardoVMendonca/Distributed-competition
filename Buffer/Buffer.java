@@ -17,16 +17,36 @@ public class Buffer {
     private static final String SERVER_IP = "127.0.0.1";
     private static final int PORT = 1999;
     private static final ArrayList<Integer> SERVER_PORT = new ArrayList<Integer>(Arrays.asList(2899, 2999));
-
     private static Queue<String> resquestQueue = new LinkedList<>();
+
+    static class RequestToServer implements Runnable {
+        private String request;
+
+        public RequestToServer(String request) {
+            this.request = request;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("Testando a cricao de threads   " + request);
+            // Socket socket;
+            // PrintWriter out;
+            // try {
+            // socket = new Socket(SERVER_IP, SERVER_PORT.get(0));
+
+            // out = new PrintWriter(socket.getOutputStream(), true);
+            // out.println(request);
+
+            // } catch (SocketException e) {
+            // e.printStackTrace();
+            // } catch (IOException e) {
+            // e.printStackTrace();
+            // }
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         ServerSocket listener = new ServerSocket(PORT);
-
-        int index = 0;
-
-        Socket socket_server_1, socket_server_2;
-        PrintWriter out_server_1, out_server_2;
 
         try {
             while (true) {
@@ -47,19 +67,17 @@ public class Buffer {
                     resquestQueue.add(parsedRequest[1]);
                     // System.out.println(resquestQueue);
 
+                    ArrayList<Thread> ServerThread = new ArrayList<Thread>();
                     if (parsedRequest[1].startsWith("w")) {
+                        for (int i = 0; i < 2; i++) { // Dois pois há apenas dois servidores
+                            Thread newThread = new Thread(new RequestToServer(parsedRequest[1]));
+                            ServerThread.add(newThread);
+                            ServerThread.get(i).start();
+                        }
                         try {
-                            socket_server_1 = new Socket(SERVER_IP, SERVER_PORT.get(0));
-                            socket_server_2 = new Socket(SERVER_IP, SERVER_PORT.get(1));
-
-                            out_server_1 = new PrintWriter(socket_server_1.getOutputStream(), true);
-                            out_server_1.println(parsedRequest[1]);
-
-                            out_server_2 = new PrintWriter(socket_server_2.getOutputStream(), true);
-                            out_server_2.println(parsedRequest[1]);
-
-                            
-                        } catch (SocketException e) {
+                            for (int i = 0; i < 2; i++)
+                                ServerThread.get(i).join();
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     } else {
