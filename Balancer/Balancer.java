@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.List;
 
 public class Balancer extends Thread {
 
@@ -15,7 +14,7 @@ public class Balancer extends Thread {
     private final int port;
 
     private static final String SERVER_IP = "127.0.0.1";
-    private static final int BLOCKER_PORT = 1999;
+    private static final int BUFFER_PORT = 1999;
 
     private Socket socket;
     private PrintWriter out;
@@ -27,7 +26,7 @@ public class Balancer extends Thread {
 
     public void Listen() throws IOException {
         ServerSocket listener = new ServerSocket(port);
-        ;
+        
         try {
             System.out.println("[BALANCER] " + id + " Esperando por conexão com cliente");
             Socket client = listener.accept();
@@ -55,7 +54,7 @@ public class Balancer extends Thread {
 
                 while (true) {
                     try {
-                        socket = new Socket(SERVER_IP, BLOCKER_PORT);
+                        socket = new Socket(SERVER_IP, BUFFER_PORT);
                         break;
                     } catch (SocketException e) {
                         continue;

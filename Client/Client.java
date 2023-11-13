@@ -5,12 +5,7 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Random;
-
-import javax.swing.plaf.TreeUI;
-
-import Balancer.Balancer;
 
 public class Client extends Thread {
     private final int id;
@@ -63,8 +58,8 @@ public class Client extends Thread {
             try {
                 boolean isWrite = random.nextBoolean(); // False - Write, True - Read
 
-                // int sleepTime = getRandomNumber(500, 2000);
-                int sleepTime = 4000;
+                int sleepTime = getRandomNumber(500, 2000);
+                //int sleepTime = 4000;
                 int number_1 = getRandomNumber(2, 1000000);
                 int number_2 = getRandomNumber(2, 1000000);
 
