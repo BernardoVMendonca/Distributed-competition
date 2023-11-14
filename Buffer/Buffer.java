@@ -55,7 +55,7 @@ public class Buffer {
                     // e.printStackTrace();
                     continue;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
                     continue;
                 }
             }
@@ -65,16 +65,17 @@ public class Buffer {
 
         @Override
         public void run() {
-            // System.out.println("Testando a cricao de threads " + request);
             Socket socket = null;
+            PrintWriter out;
+
             try {
                 socket = connectToServer(socket);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            PrintWriter out;
+            
             try {
-                System.out.println(request);
+                // System.out.println(request);
                 out = new PrintWriter(socket.getOutputStream(), true);
                 out.println(request + " : " + sleepTime);
                 socket.close();
@@ -103,11 +104,9 @@ public class Buffer {
                     if (request != null) {
                         parsedRequest = request.split(":");
 
-                        // System.out.println("[BUFFER] conectado ao [BALANCER] " + parsedRequest[0]);
-                        // System.out.println(parsedRequest[1]);
+                        System.out.println("[BUFFER] conectado ao [BALANCER] " + parsedRequest[0]);
 
                         addRequest(parsedRequest[1]);
-                        // System.out.println(QUEUE_REQUEST.size() + " : " + QUEUE_REQUEST);
                     }
                     listener.close();
                 }
@@ -139,9 +138,6 @@ public class Buffer {
                         ServerThread.get(i).start();
                         ServerThread.get(i).join();
                     }
-
-                    // for (int i = 0; i < ARRAY_SERVER_PORT.size(); i++)
-                    // ServerThread.get(i).join();
 
                     ServerThread.removeAll(ServerThread);
                 } catch (IllegalThreadStateException e) {

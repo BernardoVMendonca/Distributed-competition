@@ -58,10 +58,8 @@ public class Server extends Thread {
                 if (request.startsWith("w")) {
                     updateFile(request);
                 } else {
-                    // readFile();
+                    readFile();
                 }
-            } else {
-                System.out.println("ERRO CARALHOOOOOOOOOOOOOOOOOOOOOO");
             }
 
         } catch (IOException e) {
