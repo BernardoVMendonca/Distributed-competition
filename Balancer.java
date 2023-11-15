@@ -28,9 +28,9 @@ public class Balancer extends Thread {
         ServerSocket listener = new ServerSocket(port);
         
         try {
-            System.out.println("[BALANCER] " + id + " Esperando por conexão com cliente");
+//            System.out.println("[BALANCER] " + id + " Esperando por conexão com cliente");
             Socket client = listener.accept();
-            System.out.println("[BALANCER] " + id + " Cliente conectado");
+//            System.out.println("[BALANCER] " + id + " Cliente conectado");
 
             getClientRequest(client);
 
@@ -77,5 +77,9 @@ public class Balancer extends Thread {
                 e.printStackTrace();
             }
 
+    }
+    
+    public void sleep(int duration) throws InterruptedException {
+    	Thread.sleep(duration);
     }
 }

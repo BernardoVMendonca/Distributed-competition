@@ -1,9 +1,0 @@
-ola mundo
-asdasd
-asdasdasd
-asdasd
-
-dsd
-s
-O MDC entre 2 e 10 é 2
-O MDC entre 4 e 10 é 2

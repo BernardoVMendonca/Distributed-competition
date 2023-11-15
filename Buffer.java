@@ -120,6 +120,7 @@ public class Buffer {
 
     public static void main(String[] args) throws IOException {
         Thread listenFromBalancer = new Thread(new RequestFromBalancer());
+    	System.out.println("Buffer start");
 
         try {
             listenFromBalancer.start();

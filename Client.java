@@ -34,13 +34,14 @@ public class Client extends Thread {
             while (true) {
                 try {
                     socket = new Socket(SERVER_IP, balancer_port);
-                    System.out.println("Cliente " + id + " conectado na porta " + balancer_port);
+//                    System.out.println("Cliente " + id + " conectado na porta " + balancer_port);
                     break;
                 } catch (SocketException e) {
                     if (balancer_port == 12345)
                         balancer_port = 1777;
                     else
                         balancer_port = 12345;
+                    System.out.println("Troquei de porta: " + balancer_port);
                     continue;
                 }
             }
@@ -58,8 +59,8 @@ public class Client extends Thread {
             try {
                 boolean isWrite = random.nextBoolean(); // False - Write, True - Read
 
-                int sleepTime = getRandomNumber(500, 2000);
-                //int sleepTime = 4000;
+                int sleepTime = getRandomNumber(50, 200);
+
                 int number_1 = getRandomNumber(2, 1000000);
                 int number_2 = getRandomNumber(2, 1000000);
 
@@ -67,10 +68,10 @@ public class Client extends Thread {
                 out = new PrintWriter(socket.getOutputStream(), true);
 
                 if (!isWrite) {
-                    System.out.println("[CLIENT] " + id + " checando MDC: " + number_1 + " & " + number_2);
+//                    System.out.println("[CLIENT] " + id + " checando MDC: " + number_1 + " & " + number_2);
                     out.println("write " + number_1 + " - " + number_2);
                 } else {
-                    System.out.println("Cliente lendo");
+//                    System.out.println("Cliente lendo");
                     out.println("read");
                 }
 
