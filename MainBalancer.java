@@ -1,8 +1,6 @@
 
 
 import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class MainBalancer {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -12,18 +10,5 @@ public class MainBalancer {
         
         balancer_1.start();
         balancer_2.start();
-        
-        
-        while(true) {
-        	boolean bId = new Random().nextBoolean();
-        	if(bId) {
-        		System.out.println("Balanceador 1 soninho");
-        		balancer_1.sleep(5000);
-        	} else {
-        		System.out.println("Balanceador 2 soninho");
-        		balancer_2.sleep(5000);
-        	}       	
-        	TimeUnit.MILLISECONDS.sleep(5000);        	        
-        }
     }
 }

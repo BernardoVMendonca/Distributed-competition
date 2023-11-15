@@ -28,9 +28,7 @@ public class Server extends Thread {
         ServerSocket listener = new ServerSocket(port);
 
         try {
-            // System.out.println("[SERVER] " + id + " Esperando por conexão com buffer");
             Socket buffer = listener.accept();
-            // System.out.println("[SERVER] " + id + " Buffer conectado");
 
             getBufferRequest(buffer);
 
@@ -50,7 +48,6 @@ public class Server extends Thread {
             completeRequest = in.readLine();
 
             if (completeRequest != null) {
-                //System.out.println("[SERVER] " + id + " : " + completeRequest);
                 String[] parsedRequest = completeRequest.split(" : ");
                 String request = parsedRequest[0];
                 sleepTime = Integer.parseInt(parsedRequest[1]);
@@ -69,12 +66,9 @@ public class Server extends Thread {
     }
 
     private void readFile() {
-        // System.out.println(fileName);
         File file = new File(fileName);
 
         try {
-            // System.out.println("Attempting to read from file in:
-            // "+file.getCanonicalPath());
             Scanner scanner = new Scanner(file);
 
             while (scanner.hasNextLine()) {

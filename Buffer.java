@@ -52,10 +52,8 @@ public class Buffer {
                     socket = new Socket(SERVER_IP, ARRAY_SERVER_PORT.get(serverId));
                     break;
                 } catch (SocketException e) {
-                    // e.printStackTrace();
                     continue;
                 } catch (IOException e) {
-                    // e.printStackTrace();
                     continue;
                 }
             }
@@ -75,7 +73,6 @@ public class Buffer {
             }
             
             try {
-                // System.out.println(request);
                 out = new PrintWriter(socket.getOutputStream(), true);
                 out.println(request + " : " + sleepTime);
                 socket.close();
@@ -93,7 +90,6 @@ public class Buffer {
             try {
                 while (true) {
                     listener = new ServerSocket(PORT);
-                    // System.out.println("[BUFFER] Esperando por conexão com balanceador");
                     Socket client = listener.accept();
 
                     BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -108,6 +104,7 @@ public class Buffer {
 
                         addRequest(parsedRequest[1]);
                     }
+                    client.close();
                     listener.close();
                 }
 

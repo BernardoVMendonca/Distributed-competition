@@ -34,7 +34,6 @@ public class Client extends Thread {
             while (true) {
                 try {
                     socket = new Socket(SERVER_IP, balancer_port);
-//                    System.out.println("Cliente " + id + " conectado na porta " + balancer_port);
                     break;
                 } catch (SocketException e) {
                     if (balancer_port == 12345)
@@ -68,10 +67,8 @@ public class Client extends Thread {
                 out = new PrintWriter(socket.getOutputStream(), true);
 
                 if (!isWrite) {
-//                    System.out.println("[CLIENT] " + id + " checando MDC: " + number_1 + " & " + number_2);
                     out.println("write " + number_1 + " - " + number_2);
                 } else {
-//                    System.out.println("Cliente lendo");
                     out.println("read");
                 }
 

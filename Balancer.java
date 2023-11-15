@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,76 +9,73 @@ import java.net.SocketException;
 
 public class Balancer extends Thread {
 
-    private final int id;
-    private final int port;
+	private final int id;
+	private final int port;
 
-    private static final String SERVER_IP = "127.0.0.1";
-    private static final int BUFFER_PORT = 1999;
+	private static final String SERVER_IP = "127.0.0.1";
+	private static final int BUFFER_PORT = 1999;
 
-    private Socket socket;
-    private PrintWriter out;
+	private Socket socket;
+	private PrintWriter out;
 
-    public Balancer(int id, int port) throws IOException {
-        this.id = id;
-        this.port = port;
-    }
+	public Balancer(int id, int port) throws IOException {
+		this.id = id;
+		this.port = port;
+	}
 
-    public void Listen() throws IOException {
-        ServerSocket listener = new ServerSocket(port);
-        
-        try {
-//            System.out.println("[BALANCER] " + id + " Esperando por conexão com cliente");
-            Socket client = listener.accept();
-//            System.out.println("[BALANCER] " + id + " Cliente conectado");
+	public void Listen() throws IOException {
+		ServerSocket listener = new ServerSocket(port);
 
-            getClientRequest(client);
+		try {
+			Socket client = listener.accept();
 
-            client.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            listener.close();
-        }
-    }
+			getClientRequest(client);
 
-    public void getClientRequest(Socket client) throws IOException {
-        try {
+			client.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			listener.close();
+		}
+	}
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            String request = in.readLine();
+	public void getClientRequest(Socket client) throws IOException {
+		try {
 
-            if (request != null) {
-                // System.out.println(request);
+			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			String request = in.readLine();
 
-                while (true) {
-                    try {
-                        socket = new Socket(SERVER_IP, BUFFER_PORT);
-                        break;
-                    } catch (SocketException e) {
-                        continue;
-                    }
-                }
+			if (request != null) {
+				while (true) {
+					try {
+						socket = new Socket(SERVER_IP, BUFFER_PORT);
+						break;
+					} catch (SocketException e) {
+						continue;
+					}
+				}
 
-                out = new PrintWriter(socket.getOutputStream(), true);
-                out.println(id + ":" + request);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+				out = new PrintWriter(socket.getOutputStream(), true);
+				out.println(id + ":" + request);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void run() {
-        while (true)
-            try {
-                Listen();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+	public void run() {
+		// Forma de derrubar um dos balanceadores
+		boolean aux = true;
+		while (true) {
+			try {
+				if (aux && id == 1)
+					Thread.sleep(4000);
+				aux = false;
+				Listen();
+			} catch (IOException | InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-    }
-    
-    public void sleep(int duration) throws InterruptedException {
-    	Thread.sleep(duration);
-    }
 }
